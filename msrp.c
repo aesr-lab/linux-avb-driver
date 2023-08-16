@@ -333,7 +333,9 @@ static void avb_msrp_evaluate_listener_advertisement(struct msrp *msrp)
 int avb_msrp_listen(struct msrp *msrp)
 {
 	int err = 0;
+#if LINUX_VERSION_CODE < KERNEL_VERSION(5,4,0)
 	mm_segment_t oldfs;
+#endif
 	struct listner_msrp_du *tpdu = (struct listner_msrp_du *)&msrp->sd
 					       .rx_buf[sizeof(struct ethhdr)];
 	struct kvec vec;
@@ -350,20 +352,19 @@ int avb_msrp_listen(struct msrp *msrp)
 #if LINUX_VERSION_CODE < KERNEL_VERSION(5,0,0)
 	oldfs = get_fs();
 	set_fs(get_ds());
-#elif LINUX_VERSION_CODE < KERNEL_VERSION(5,10,0)
+#elif LINUX_VERSION_CODE < KERNEL_VERSION(5,4,0)
 	oldfs = get_fs();
 	set_fs(KERNEL_DS);
 #else
-	oldfs = force_uaccess_begin();
+	// code of kernel_recvmsg in kernel 5.4 contains get_fs – 
+	// hopefully, later versions have other security mechanisms....
 #endif
 
 	err = kernel_recvmsg(msrp->sd.sock, &msrp->sd.rx_msg_hdr, &vec, 1,
 			     AVB_MAX_ETH_FRAME_SIZE, MSG_DONTWAIT);
 
-#if LINUX_VERSION_CODE < KERNEL_VERSION(5,10,0)
+#if LINUX_VERSION_CODE < KERNEL_VERSION(5,4,0)
 	set_fs(oldfs);
-#else
-	force_uaccess_end(oldfs);
 #endif
 
 	if (err <= 0) {

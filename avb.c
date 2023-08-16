@@ -734,7 +734,9 @@ static int avb_avtp_listen(struct avb_card *avb_card)
 	int nrx_frames = 0;
 	int next_seq_no = 0;
 	int skipped_packets = 0;
+#if LINUX_VERSION_CODE < KERNEL_VERSION(5,4,0)
 	mm_segment_t oldfs;
+#endif
 	snd_pcm_uframes_t hw_idx = 0;
 	struct kvec vec;
 	struct avt_pdu_aaf_pcm_hdr *hdr =
@@ -753,20 +755,19 @@ static int avb_avtp_listen(struct avb_card *avb_card)
 #if LINUX_VERSION_CODE < KERNEL_VERSION(5,0,0)
 	oldfs = get_fs();
 	set_fs(get_ds());
-#elif LINUX_VERSION_CODE < KERNEL_VERSION(5,10,0)
+#elif LINUX_VERSION_CODE < KERNEL_VERSION(5,4,0)
 	oldfs = get_fs();
 	set_fs(KERNEL_DS);
 #else
-	oldfs = force_uaccess_begin();
+	// code of kernel_recvmsg in kernel 5.4 contains get_fs – 
+	// hopefully, later versions have other security mechanisms....
 #endif
 
 	err = kernel_recvmsg(avb_card->sd.sock, &avb_card->sd.rx_msg_hdr, &vec,
 			     1, AVB_MAX_ETH_FRAME_SIZE, MSG_DONTWAIT);
 
-#if LINUX_VERSION_CODE < KERNEL_VERSION(5,10,0)
+#if LINUX_VERSION_CODE < KERNEL_VERSION(5,4,0)
 	set_fs(oldfs);
-#else
-	force_uaccess_end(oldfs);
 #endif
 
 	if (err > 0) {
