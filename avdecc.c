@@ -1,5 +1,9 @@
 #include "avdecc.h"
 
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(5,10,0)
+#include <linux/uaccess.h>
+#endif
+
 bool avb_avdecc_init(struct avdecc *avdecc)
 {
 	avb_log(AVB_KERN_INFO, KERN_INFO "avb_avdecc_init");
@@ -255,11 +259,24 @@ static int avb_avdecc_listen(struct avdecc *avdecc)
 	vec.iov_base = avdecc->sd.rx_buf;
 	vec.iov_len = AVB_MAX_ETH_FRAME_SIZE;
 
+#if LINUX_VERSION_CODE < KERNEL_VERSION(5,0,0)
+	oldfs = get_fs();
+	set_fs(get_ds());
+#elif LINUX_VERSION_CODE < KERNEL_VERSION(5,10,0)
 	oldfs = get_fs();
 	set_fs(KERNEL_DS);
+#else
+	oldfs = force_uaccess_begin();
+#endif
+
 	err = kernel_recvmsg(avdecc->sd.sock, &avdecc->sd.rx_msg_hdr, &vec, 1,
 			     AVB_MAX_ETH_FRAME_SIZE, MSG_DONTWAIT);
+
+#if LINUX_VERSION_CODE < KERNEL_VERSION(5,10,0)
 	set_fs(oldfs);
+#else
+	force_uaccess_end(oldfs);
+#endif
 
 	if (err <= 0)
 		if (err != -11)

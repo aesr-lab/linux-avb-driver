@@ -1,5 +1,9 @@
 #include "msrp.h"
 
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(5,10,0)
+#include <linux/uaccess.h>
+#endif
+
 bool avb_msrp_init(struct msrp *msrp)
 {
 	avb_log(AVB_KERN_INFO, KERN_INFO "avb_msrp_init");
@@ -343,11 +347,24 @@ int avb_msrp_listen(struct msrp *msrp)
 	vec.iov_base = msrp->sd.rx_buf;
 	vec.iov_len = AVB_MAX_ETH_FRAME_SIZE;
 
+#if LINUX_VERSION_CODE < KERNEL_VERSION(5,0,0)
+	oldfs = get_fs();
+	set_fs(get_ds());
+#elif LINUX_VERSION_CODE < KERNEL_VERSION(5,10,0)
 	oldfs = get_fs();
 	set_fs(KERNEL_DS);
+#else
+	oldfs = force_uaccess_begin();
+#endif
+
 	err = kernel_recvmsg(msrp->sd.sock, &msrp->sd.rx_msg_hdr, &vec, 1,
 			     AVB_MAX_ETH_FRAME_SIZE, MSG_DONTWAIT);
+
+#if LINUX_VERSION_CODE < KERNEL_VERSION(5,10,0)
 	set_fs(oldfs);
+#else
+	force_uaccess_end(oldfs);
+#endif
 
 	if (err <= 0) {
 		if (err != -11)

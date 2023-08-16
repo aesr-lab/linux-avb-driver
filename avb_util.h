@@ -6,6 +6,7 @@
 #include <linux/net.h>
 #include <linux/if_packet.h>
 #include <linux/rtnetlink.h>
+#include <linux/version.h>
 #include <sound/pcm.h>
 
 #define SND_AVB_DRIVER "snd_avb"

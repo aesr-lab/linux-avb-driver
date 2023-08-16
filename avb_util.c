@@ -1,6 +1,8 @@
 #include "avb_util.h"
 
-#include <uapi/linux/time.h>
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(5,10,0)
+#include <net/sock.h>
+#endif
 
 void avb_log(int level, char *fmt, ...)
 {
@@ -46,7 +48,11 @@ bool avb_socket_init(struct socketdata *sd, int rx_timeout)
 {
 	int err = 0;
 	struct net_device *dev = NULL;
+#if LINUX_VERSION_CODE < KERNEL_VERSION(5,10,0)
 	struct timeval ts_opts;
+#else
+	struct __kernel_old_timeval ts_opts;
+#endif
 	ts_opts.tv_sec = (rx_timeout / 1000);
 	ts_opts.tv_usec = (rx_timeout % 1000);
 
@@ -69,8 +75,16 @@ bool avb_socket_init(struct socketdata *sd, int rx_timeout)
 	dev_set_promiscuity(dev, 1);
 	rtnl_unlock();
 
-	if ((err = kernel_setsockopt(sd->sock, SOL_SOCKET, SO_RCVTIMEO_OLD,
-				     (void *)&ts_opts, sizeof(ts_opts))) != 0) {
+	if ((err =
+#if LINUX_VERSION_CODE < KERNEL_VERSION(5,10,0)
+		kernel_setsockopt(
+			sd->sock, SOL_SOCKET, SO_RCVTIMEO_OLD,
+			(void *)&ts_opts, sizeof(ts_opts))) != 0) {
+#else
+		sock_setsockopt(
+			sd->sock, SOL_SOCKET, SO_RCVTIMEO_OLD,
+			USER_SOCKPTR(&ts_opts), sizeof(ts_opts))) != 0) {
+#endif
 		avb_log(AVB_KERN_WARN,
 			KERN_WARNING "avb_msrp_init set rx timeout fails %d\n",
 			err);

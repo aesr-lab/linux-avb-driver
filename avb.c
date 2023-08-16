@@ -750,11 +750,24 @@ static int avb_avtp_listen(struct avb_card *avb_card)
 	vec.iov_len = AVB_MAX_ETH_FRAME_SIZE;
 	vec.iov_base = avb_card->sd.rx_buf;
 
+#if LINUX_VERSION_CODE < KERNEL_VERSION(5,0,0)
+	oldfs = get_fs();
+	set_fs(get_ds());
+#elif LINUX_VERSION_CODE < KERNEL_VERSION(5,10,0)
 	oldfs = get_fs();
 	set_fs(KERNEL_DS);
+#else
+	oldfs = force_uaccess_begin();
+#endif
+
 	err = kernel_recvmsg(avb_card->sd.sock, &avb_card->sd.rx_msg_hdr, &vec,
 			     1, AVB_MAX_ETH_FRAME_SIZE, MSG_DONTWAIT);
+
+#if LINUX_VERSION_CODE < KERNEL_VERSION(5,10,0)
 	set_fs(oldfs);
+#else
+	force_uaccess_end(oldfs);
+#endif
 
 	if (err > 0) {
 		avb_card->rx.socket_count++;
