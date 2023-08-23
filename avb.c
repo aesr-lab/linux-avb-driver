@@ -68,7 +68,6 @@
 MODULE_AUTHOR("Indumathi Duraipandian <indu9086@gmail.com>");
 MODULE_DESCRIPTION("AVB soundcard");
 MODULE_LICENSE("GPL");
-MODULE_SUPPORTED_DEVICE("{{ALSA,AVB soundcard}}");
 
 #define AVB_DEBUG
 
