@@ -9,9 +9,9 @@ obj-$(CONFIG_SND_AVB) += snd-avb.o
 else
 # out-of-tree compilation
 
-KVERSION := $(shell uname -r)
-
-KTREE := /lib/modules/$(KVERSION)
+# define variables if not already set
+KVERSION ?= $(shell uname -r)
+KTREE ?= /lib/modules/$(KVERSION)
 
 all:
 	make -C $(KTREE)/build M=$(PWD) modules
