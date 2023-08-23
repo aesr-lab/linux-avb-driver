@@ -7,6 +7,9 @@
  *  Based on generic AVB Driver:
  *  Copyright (c) Indumathi Duraipandian <indu9086@gmail.com>
  *
+ *  Updates for out-of-tree compilation and kernel versions > 5.10:
+ *  Thomas Grill <gr@grrrr.org>
+ *
  *   This program is free software; you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
  *   the Free Software Foundation; either version 2 of the License, or
