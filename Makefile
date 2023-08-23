@@ -19,4 +19,9 @@ all:
 clean:
 	make -C $(KTREE)/build M=$(PWD) clean
 
+install:
+	mkdir -p $(KTREE)/extra
+	cp snd-avb.ko $(KTREE)/extra
+	depmod -a
+
 endif
