@@ -77,6 +77,7 @@ static bool enable[SND_AVB_NUM_CARDS] = { 1,
 					  [1 ...(SND_AVB_NUM_CARDS - 1)] = 0 };
 static int pcm_substreams[SND_AVB_NUM_CARDS] = { 1 };
 static int pcm_notify[SND_AVB_NUM_CARDS];
+static char *avb_ifname = "eth0";
 
 module_param_array(index, int, NULL, 0444);
 MODULE_PARM_DESC(index, "Index value for avb soundcard.");
@@ -89,6 +90,9 @@ MODULE_PARM_DESC(pcm_substreams, "PCM substreams # (1-8) for avb driver.");
 module_param_array(pcm_notify, int, NULL, 0444);
 MODULE_PARM_DESC(pcm_notify,
 		 "Break capture when PCM format/rate/channels changes.");
+module_param(avb_ifname, charp, 0444);
+MODULE_PARM_DESC(avb_ifname, "Network interface to use (default is eth0).");
+
 
 static struct avb_device avb_device;
 static int numcards = 0;
@@ -873,7 +877,7 @@ static void avb_wq_fn(struct work_struct *work)
 
 	if (wd->delayed_work_id == AVB_DELAY_WORK_MSRP) {
 		if (wd->dw.msrp->initialized == false)
-			wd->dw.msrp->initialized = avb_msrp_init(wd->dw.msrp);
+			wd->dw.msrp->initialized = avb_msrp_init(avb_ifname, wd->dw.msrp);
 
 		if (wd->dw.msrp->initialized == false) {
 			queue_delayed_work(
@@ -940,7 +944,7 @@ static void avb_wq_fn(struct work_struct *work)
 	} else if (wd->delayed_work_id == AVB_DELAY_WORK_AVDECC) {
 		if (wd->dw.avdecc->initialized == false)
 			wd->dw.avdecc->initialized =
-				avb_avdecc_init(wd->dw.avdecc);
+				avb_avdecc_init(avb_ifname, wd->dw.avdecc);
 
 		if (wd->dw.avdecc->initialized == false) {
 			queue_delayed_work(
@@ -1158,7 +1162,7 @@ static int avb_probe(struct platform_device *devptr)
 		avb_card->sd.destmac[4] = 0x00;
 		avb_card->sd.destmac[5] = 0x0E;
 
-		if (!avb_socket_init(&avb_card->sd, 100)) {
+		if (!avb_socket_init(avb_ifname, &avb_card->sd, 100)) {
 			avb_log(AVB_KERN_ERR,
 				KERN_ERR "avb_probe socket init failed");
 			err = -1;

@@ -302,7 +302,7 @@ struct avb_hrtimer {
 };
 #endif
 
-bool avb_socket_init(struct socketdata *sd, int rx_timeout);
+bool avb_socket_init(const char *ifname, struct socketdata *sd, int rx_timeout);
 void avb_log(int level, char *fmt, ...);
 
 #endif

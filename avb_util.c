@@ -44,7 +44,7 @@ void avb_log(int level, char *fmt, ...)
 	va_end(args);
 }
 
-bool avb_socket_init(struct socketdata *sd, int rx_timeout)
+bool avb_socket_init(const char *ifname, struct socketdata *sd, int rx_timeout)
 {
 	int err = 0;
 	struct net_device *dev = NULL;
@@ -58,7 +58,13 @@ bool avb_socket_init(struct socketdata *sd, int rx_timeout)
 
 	avb_log(AVB_KERN_INFO, KERN_INFO "avb_socket_init");
 
-	dev = dev_get_by_name_rcu(&init_net, "eth0");
+	dev = dev_get_by_name_rcu(&init_net, ifname);
+
+	if (!dev) {
+		avb_log(AVB_KERN_ERR,
+			KERN_ERR "avb_socket_init device %s not found\n", ifname);
+		return false;
+	}
 
 	if ((err = sock_create_kern(&init_net, AF_PACKET, SOCK_RAW,
 				    htons(sd->type), &sd->sock)) != 0) {

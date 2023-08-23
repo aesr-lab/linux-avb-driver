@@ -110,7 +110,7 @@ struct msrp {
 	u8 stream_id[8];
 };
 
-bool avb_msrp_init(struct msrp *msrp);
+bool avb_msrp_init(const char *ifname, struct msrp *msrp);
 void avb_msrp_domaindeclarations(struct msrp *msrp);
 void avb_msrp_talkerdeclarations(struct msrp *msrp, bool join, int state);
 void avb_msrp_listenerdeclarations(struct msrp *msrp, bool join, int state);

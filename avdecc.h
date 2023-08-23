@@ -445,7 +445,7 @@ struct avdecc {
 	struct socketdata sd;
 };
 
-bool avb_avdecc_init(struct avdecc *avdecc);
+bool avb_avdecc_init(const char *ifname, struct avdecc *avdecc);
 void avb_adp_discover(struct avdecc *avdecc);
 void avb_adp_advertise(struct avdecc *avdecc);
 void avb_maap_announce(struct avdecc *avdecc);

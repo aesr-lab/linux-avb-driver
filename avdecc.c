@@ -4,7 +4,7 @@
 #include <linux/uaccess.h>
 #endif
 
-bool avb_avdecc_init(struct avdecc *avdecc)
+bool avb_avdecc_init(const char *ifname, struct avdecc *avdecc)
 {
 	avb_log(AVB_KERN_INFO, KERN_INFO "avb_avdecc_init");
 
@@ -19,7 +19,7 @@ bool avb_avdecc_init(struct avdecc *avdecc)
 	avdecc->acmp_tx_state = AVB_ACMP_STATUS_NOT_CONNECTED;
 	avdecc->acmp_rx_state = AVB_ACMP_STATUS_NOT_CONNECTED;
 
-	return avb_socket_init(&avdecc->sd, 1000);
+	return avb_socket_init(ifname, &avdecc->sd, 1000);
 }
 
 static void avb_acdecc_init_and_fill_eth_hdr(struct avdecc *avdecc,

@@ -4,7 +4,7 @@
 #include <linux/uaccess.h>
 #endif
 
-bool avb_msrp_init(struct msrp *msrp)
+bool avb_msrp_init(const char *ifname, struct msrp *msrp)
 {
 	avb_log(AVB_KERN_INFO, KERN_INFO "avb_msrp_init");
 
@@ -19,7 +19,7 @@ bool avb_msrp_init(struct msrp *msrp)
 	msrp->sd.destmac[4] = 0x00;
 	msrp->sd.destmac[5] = 0x0E;
 
-	return avb_socket_init(&msrp->sd, 1000);
+	return avb_socket_init(ifname, &msrp->sd, 1000);
 }
 
 void avb_msrp_domaindeclarations(struct msrp *msrp)
