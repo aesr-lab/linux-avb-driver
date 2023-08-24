@@ -89,10 +89,10 @@ bool avb_socket_init(const char *ifname, struct socketdata *sd, int rx_timeout)
 #else
 		sock_setsockopt(
 			sd->sock, SOL_SOCKET, SO_RCVTIMEO_OLD,
-			USER_SOCKPTR(&ts_opts), sizeof(ts_opts))) != 0) {
+			KERNEL_SOCKPTR(&ts_opts), sizeof(ts_opts))) != 0) {
 #endif
 		avb_log(AVB_KERN_WARN,
-			KERN_WARNING "avb_msrp_init set rx timeout fails %d\n",
+			KERN_WARNING "avb_msrp_init set rx timeout fails with error %d\n",
 			err);
 		return false;
 	}
