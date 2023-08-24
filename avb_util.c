@@ -84,7 +84,12 @@ bool avb_socket_init(const char *ifname, struct socketdata *sd, int rx_timeout)
 	if ((err =
 #if LINUX_VERSION_CODE < KERNEL_VERSION(5,10,0)
 		kernel_setsockopt(
-			sd->sock, SOL_SOCKET, SO_RCVTIMEO_OLD,
+			sd->sock, SOL_SOCKET,
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(5,1,0)
+			SO_RCVTIMEO_OLD,
+#else
+			SO_RCVTIMEO,
+#endif
 			(void *)&ts_opts, sizeof(ts_opts))) != 0) {
 #else
 		sock_setsockopt(
