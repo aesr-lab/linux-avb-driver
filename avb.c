@@ -132,6 +132,8 @@ static int avb_avtp_listen(struct avb_card *card);
 
 static void avb_wq_fn(struct work_struct *work);
 
+DECLARE_DELAYED_WORK(avb_wq, avb_wq_fn);
+
 static int avb_pcm_new(struct avb_card *avbc, int device, int substreams);
 
 #ifdef CONFIG_PM_SLEEP
@@ -231,8 +233,9 @@ static struct work_data *avb_init_and_queue_work(int work_id, void *wdata,
 
 	wd->dw.data = wdata;
 	wd->delayed_work_id = work_id;
-	INIT_DELAYED_WORK((struct delayed_work *)wd, avb_wq_fn);
+	INIT_DELAYED_WORK((struct delayed_work *)wd, avb_wq_fn); // this is probably superfluous 
 
+	// we have one common queue
 	queue_delayed_work(avb_device.wq, (struct delayed_work *)wd, delay);
 
 	return wd;
@@ -876,16 +879,16 @@ static void avb_wq_fn(struct work_struct *work)
 	struct work_data *wd = (struct work_data *)work;
 
 	if (wd->delayed_work_id == AVB_DELAY_WORK_MSRP) {
-		if (wd->dw.msrp->initialized == false)
+		if (!wd->dw.msrp->initialized)
 			wd->dw.msrp->initialized = avb_msrp_init(avb_ifname, wd->dw.msrp);
 
-		if (wd->dw.msrp->initialized == false) {
+		if (!wd->dw.msrp->initialized) {
 			queue_delayed_work(
 				avb_device.wq,
 				(struct delayed_work *)avb_device.msrpwd,
 				10000);
 		} else {
-			if (wd->dw.msrp->started == true) {
+			if (wd->dw.msrp->started) {
 				do {
 					err = avb_msrp_listen(wd->dw.msrp);
 					rx_count += ((err > 0) ? (1) : (0));
@@ -942,11 +945,11 @@ static void avb_wq_fn(struct work_struct *work)
 				msecs_to_jiffies(2000));
 		}
 	} else if (wd->delayed_work_id == AVB_DELAY_WORK_AVDECC) {
-		if (wd->dw.avdecc->initialized == false)
+		if (!wd->dw.avdecc->initialized)
 			wd->dw.avdecc->initialized =
 				avb_avdecc_init(avb_ifname, wd->dw.avdecc);
 
-		if (wd->dw.avdecc->initialized == false) {
+		if (!wd->dw.avdecc->initialized) {
 			queue_delayed_work(
 				avb_device.wq,
 				(struct delayed_work *)avb_device.avdeccwd,

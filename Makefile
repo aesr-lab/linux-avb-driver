@@ -11,17 +11,18 @@ else
 
 # define variables if not already set
 KVERSION ?= $(shell uname -r)
-KTREE ?= /lib/modules/$(KVERSION)
+KTREE ?= /lib/modules/$(KVERSION)/build
+MODINSTALL ?= /lib/modules/$(KVERSION)/extra
 
 all:
-	make -C $(KTREE)/build M=$(PWD) modules
+	make -C $(KTREE) M=$(PWD) modules
 
 clean:
-	make -C $(KTREE)/build M=$(PWD) clean
+	make -C $(KTREE) M=$(PWD) clean
 
 install:
-	mkdir -p $(KTREE)/extra
-	cp snd-avb.ko $(KTREE)/extra
+	mkdir -p $(MODINSTALL)
+	cp snd-avb.ko $(MODINSTALL)
 	depmod -a
 
 endif
