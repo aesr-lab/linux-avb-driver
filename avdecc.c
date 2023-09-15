@@ -1341,6 +1341,11 @@ static void avb_avdecc_aecp_respond_to_cmd(struct avdecc *avdecc,
 		avb_avdecc_aecp_respond_to_AEM_cmd(avdecc, msrp);
 		break;
 
+	case AVB_AECP_MSGTYPE_AEM_RESPONSE:
+		// we got a response
+		// TODO: response analysis
+		break;
+
 	default:
 		avb_log(AVB_KERN_INFO,
 			KERN_INFO
