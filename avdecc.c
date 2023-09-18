@@ -1157,7 +1157,6 @@ static void avb_avdecc_aecp_respond_to_AEM_cmd(struct avdecc *avdecc,
 					      1);
 		aem_stream_info->desc_type = get_stream_info_req->desc_type;
 		aem_stream_info->desc_idx = 0;
-		aem_stream_info->flags = htonl(0x0);
 		aem_stream_info->curr_fmt.fmt.avtp.sub_type =
 			AVB_AEM_STREAM_FORMAT_AVTP;
 		aem_stream_info->curr_fmt.fmt.avtp.b1.nsr = 5;
@@ -1219,6 +1218,7 @@ static void avb_avdecc_aecp_respond_to_AEM_cmd(struct avdecc *avdecc,
 		aem_stream_info->stream_dest_MAC[5] = 0xf1;
 		aem_stream_info->msrp_failure_code = 0;
 		aem_stream_info->stream_vlan_id = htons(2);
+		aem_stream_info->flags = htonl(0xfff80000); // TODO: should probably more specific with AEM_STREAM_INFO_FLAGS_* bitmasks
 
 		if (gt_str_info_cmd->desc_idx > 0) {
 			tx_size = sizeof(struct ethhdr) +
