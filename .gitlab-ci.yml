@@ -7,7 +7,7 @@ build:
     - make
   artifacts:
     paths:
-      - *.ko
+      - ./*.ko
     expire_in: 1h
 
 .test:
