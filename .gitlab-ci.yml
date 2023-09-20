@@ -3,6 +3,8 @@ variables:
 
 build:
   stage: build
+  tags:
+    - shell
   script:
     - make
   artifacts:
@@ -12,6 +14,8 @@ build:
 
 .test:
   stage: test
+  tags:
+    - shell
   script:
     - true
 
