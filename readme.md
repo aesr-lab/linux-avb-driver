@@ -5,6 +5,9 @@ Documentation in https://niklaswan.github.io/GSoC-Overview/avb-alsa/ .
 
 Redesigned for [Out-of-tree compilation](https://docs.kernel.org/kbuild/modules.html).
 
+A word of warning: **At this point the module is in an experimental alpha stage!**
+It will most probably not work as expected, especially it cannot be used in any production environment.
+
 ## Prerequisites
 
 A build infrastructure and kernel headers are needed:
