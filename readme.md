@@ -5,9 +5,23 @@ Documentation in https://niklaswan.github.io/GSoC-Overview/avb-alsa/ .
 
 Redesigned for [Out-of-tree compilation](https://docs.kernel.org/kbuild/modules.html).
 
-## Compilation
+## Prerequisites
+
+A build infrastructure and kernel headers are needed:
+``sudo apt install build-essential linux-headers``
+
+The module should work with kernel versions <= 5.10.
+
+## Building
 
 For compilation on the native system just run ``make``.
+Then install with ``sudo make install``.
 
 Providing a specific kernel version (will be used to access `/lib/modules/$KVERSION`)
 ``make KVERSION=5.10.0-23-amd64``
+
+## Installation
+
+Once installed, the module can be loaded with
+``sudo modprobe snd-avb``.
+
