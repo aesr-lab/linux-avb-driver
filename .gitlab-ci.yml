@@ -22,6 +22,7 @@ build:
 push_github:
     stage: deploy
     script:
+        - git remote remove github
         - git remote add github https://$GITHUB_ACCESS_TOKEN@github.com/aesr-lab/$CI_PROJECT_NAME.git || true
         # we need some extra treatment because the gitlab-runner doesn't check out the full history
         - git push github HEAD:master --tags
