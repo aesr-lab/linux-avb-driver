@@ -13,7 +13,7 @@ It will most probably not work as expected, especially it cannot be used in any 
 A build infrastructure and kernel headers are needed:
 ``sudo apt install build-essential linux-headers``
 
-The module should work with kernel versions <= 5.10.
+The module should work with kernel versions <= 6.1.
 
 ## Building
 
