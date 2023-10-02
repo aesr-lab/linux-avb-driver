@@ -18,14 +18,15 @@ The module should (at least) work with kernel versions 5.0 to 6.1.
 ## Building
 
 For compilation on the native system just run `make`.
-Then install with ``sudo make install``.
 
 Providing a specific kernel version (will be used to access `/lib/modules/$KVERSION`)
 `make KVERSION=5.10.0-23-amd64`
 
 ## Installation
 
-Once installed, the module can be loaded with
+The module can be installed with `sudo make install`.
+
+Afterwards, the module can be loaded with
 `sudo modprobe snd-avb`.
 
 if an ethernet interface other than eth0 should be used, it can be specified on the command line:
