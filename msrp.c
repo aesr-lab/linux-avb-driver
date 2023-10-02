@@ -77,7 +77,7 @@ void avb_msrp_domaindeclarations(struct msrp *msrp)
 	if ((err = sock_sendmsg(msrp->sd.sock, &msrp->sd.tx_msg_hdr)) <= 0) {
 #else
 	if ((err = kernel_sendmsg(msrp->sd.sock, &msrp->sd.tx_msg_hdr,
-				&msrp->sd.tx_iov, 1, tx_size)) <= 0) {
+				(struct kvec *)&msrp->sd.tx_iov, 1, tx_size)) <= 0) {
 #endif
 		avb_log(AVB_KERN_WARN,
 			KERN_WARNING
@@ -181,7 +181,7 @@ void avb_msrp_talkerdeclarations(struct msrp *msrp, bool join, int state)
 	if ((err = sock_sendmsg(msrp->sd.sock, &msrp->sd.tx_msg_hdr)) <= 0) {
 #else
 	if ((err = kernel_sendmsg(msrp->sd.sock, &msrp->sd.tx_msg_hdr,
-				&msrp->sd.tx_iov, 1, tx_size)) <= 0) {
+				(struct kvec *)&msrp->sd.tx_iov, 1, tx_size)) <= 0) {
 #endif
 		avb_log(AVB_KERN_WARN,
 			KERN_WARNING
@@ -267,7 +267,7 @@ void avb_msrp_listenerdeclarations(struct msrp *msrp, bool join, int state)
 	if ((err = sock_sendmsg(msrp->sd.sock, &msrp->sd.tx_msg_hdr)) <= 0) {
 #else
 	if ((err = kernel_sendmsg(msrp->sd.sock, &msrp->sd.tx_msg_hdr,
-				&msrp->sd.tx_iov, 1, tx_size)) <= 0) {
+				(struct kvec *)&msrp->sd.tx_iov, 1, tx_size)) <= 0) {
 #endif
 		avb_log(AVB_KERN_WARN,
 			KERN_WARNING
