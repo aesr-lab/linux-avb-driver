@@ -536,11 +536,18 @@ static void avb_avtp_timer(unsigned long arg)
 
 		avb_card->sd.tx_iov.iov_base = avb_card->sd.tx_buf;
 		avb_card->sd.tx_iov.iov_len = tx_size;
+#if 0
 		iov_iter_init(&avb_card->sd.tx_msg_hdr.msg_iter, WRITE,
 			      &avb_card->sd.tx_iov, 1, tx_size);
 
 		if ((err = sock_sendmsg(avb_card->sd.sock,
-					&avb_card->sd.tx_msg_hdr)) <= 0) {
+					&avb_card->sd.tx_msg_hdr)) <= 0)
+#else
+		if ((err = kernel_sendmsg(avb_card->sd.sock,
+					&avb_card->sd.tx_msg_hdr,
+					(struct kvec *)&avb_card->sd.tx_iov, 1, tx_size)) <= 0)
+#endif
+		{
 			avb_log(AVB_KERN_WARN,
 				KERN_WARNING
 				"avb_avtp_timer Socket transmission fails %d \n",

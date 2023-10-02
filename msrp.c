@@ -70,10 +70,15 @@ void avb_msrp_domaindeclarations(struct msrp *msrp)
 
 	msrp->sd.tx_iov.iov_base = msrp->sd.tx_buf;
 	msrp->sd.tx_iov.iov_len = tx_size;
+#if 0
 	iov_iter_init(&msrp->sd.tx_msg_hdr.msg_iter, WRITE, &msrp->sd.tx_iov, 1,
 		      tx_size);
 
 	if ((err = sock_sendmsg(msrp->sd.sock, &msrp->sd.tx_msg_hdr)) <= 0) {
+#else
+	if ((err = kernel_sendmsg(msrp->sd.sock, &msrp->sd.tx_msg_hdr,
+				&msrp->sd.tx_iov, 1, tx_size)) <= 0) {
+#endif
 		avb_log(AVB_KERN_WARN,
 			KERN_WARNING
 			"avb_msrp_domaindeclarations Socket transmission fails %d \n",
@@ -169,10 +174,15 @@ void avb_msrp_talkerdeclarations(struct msrp *msrp, bool join, int state)
 
 	msrp->sd.tx_iov.iov_base = msrp->sd.tx_buf;
 	msrp->sd.tx_iov.iov_len = tx_size;
+#if 0
 	iov_iter_init(&msrp->sd.tx_msg_hdr.msg_iter, WRITE, &msrp->sd.tx_iov, 1,
 		      tx_size);
 
 	if ((err = sock_sendmsg(msrp->sd.sock, &msrp->sd.tx_msg_hdr)) <= 0) {
+#else
+	if ((err = kernel_sendmsg(msrp->sd.sock, &msrp->sd.tx_msg_hdr,
+				&msrp->sd.tx_iov, 1, tx_size)) <= 0) {
+#endif
 		avb_log(AVB_KERN_WARN,
 			KERN_WARNING
 			"avb_msrp_talkerdeclarations Socket transmission fails %d \n",
@@ -250,10 +260,15 @@ void avb_msrp_listenerdeclarations(struct msrp *msrp, bool join, int state)
 
 	msrp->sd.tx_iov.iov_base = msrp->sd.tx_buf;
 	msrp->sd.tx_iov.iov_len = tx_size;
+#if 0
 	iov_iter_init(&msrp->sd.tx_msg_hdr.msg_iter, WRITE, &msrp->sd.tx_iov, 1,
 		      tx_size);
 
 	if ((err = sock_sendmsg(msrp->sd.sock, &msrp->sd.tx_msg_hdr)) <= 0) {
+#else
+	if ((err = kernel_sendmsg(msrp->sd.sock, &msrp->sd.tx_msg_hdr,
+				&msrp->sd.tx_iov, 1, tx_size)) <= 0) {
+#endif
 		avb_log(AVB_KERN_WARN,
 			KERN_WARNING
 			"avb_msrp_listenerdeclarations Socket transmission fails %d \n",

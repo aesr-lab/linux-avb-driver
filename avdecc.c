@@ -133,10 +133,15 @@ void avb_maap_announce(struct avdecc *avdecc)
 
 	avdecc->sd.tx_iov.iov_base = avdecc->sd.tx_buf;
 	avdecc->sd.tx_iov.iov_len = tx_size;
+#if 0
 	iov_iter_init(&avdecc->sd.tx_msg_hdr.msg_iter, WRITE,
 		      &avdecc->sd.tx_iov, 1, tx_size);
 
 	if ((err = sock_sendmsg(avdecc->sd.sock, &avdecc->sd.tx_msg_hdr)) <=
+#else
+	if ((err = kernel_sendmsg(avdecc->sd.sock, &avdecc->sd.tx_msg_hdr, 
+				&avdecc->sd.tx_iov, 1, tx_size)) <=
+#endif
 	    0) {
 		avb_log(AVB_KERN_WARN,
 			KERN_WARNING
@@ -163,10 +168,15 @@ void avb_adp_discover(struct avdecc *avdecc)
 
 	avdecc->sd.tx_iov.iov_base = avdecc->sd.tx_buf;
 	avdecc->sd.tx_iov.iov_len = tx_size;
+#if 0
 	iov_iter_init(&avdecc->sd.tx_msg_hdr.msg_iter, WRITE,
 		      &avdecc->sd.tx_iov, 1, tx_size);
 
 	if ((err = sock_sendmsg(avdecc->sd.sock, &avdecc->sd.tx_msg_hdr)) <=
+#else
+	if ((err = kernel_sendmsg(avdecc->sd.sock, &avdecc->sd.tx_msg_hdr,
+				&avdecc->sd.tx_iov, 1, tx_size)) <=
+#endif
 	    0) {
 		avb_log(AVB_KERN_WARN,
 			KERN_WARNING
@@ -231,10 +241,15 @@ void avb_adp_advertise(struct avdecc *avdecc)
 
 	avdecc->sd.tx_iov.iov_base = avdecc->sd.tx_buf;
 	avdecc->sd.tx_iov.iov_len = tx_size;
+#if 0
 	iov_iter_init(&avdecc->sd.tx_msg_hdr.msg_iter, WRITE,
 		      &avdecc->sd.tx_iov, 1, tx_size);
 
 	if ((err = sock_sendmsg(avdecc->sd.sock, &avdecc->sd.tx_msg_hdr)) <=
+#else
+	if ((err = kernel_sendmsg(avdecc->sd.sock, &avdecc->sd.tx_msg_hdr,
+				&avdecc->sd.tx_iov, 1, tx_size)) <=
+#endif
 	    0) {
 		avb_log(AVB_KERN_WARN,
 			KERN_WARNING
@@ -1315,11 +1330,17 @@ static void avb_avdecc_aecp_respond_to_AEM_cmd(struct avdecc *avdecc,
 	if (tx_size > 0) {
 		avdecc->sd.tx_iov.iov_base = avdecc->sd.tx_buf;
 		avdecc->sd.tx_iov.iov_len = tx_size;
+#if 0
 		iov_iter_init(&avdecc->sd.tx_msg_hdr.msg_iter, WRITE,
 			      &avdecc->sd.tx_iov, 1, tx_size);
 
 		if ((err = sock_sendmsg(avdecc->sd.sock,
 					&avdecc->sd.tx_msg_hdr)) <= 0) {
+#else
+		if ((err = kernel_sendmsg(avdecc->sd.sock,
+					&avdecc->sd.tx_msg_hdr,
+					&avdecc->sd.tx_iov, 1, tx_size)) <= 0) {
+#endif
 			avb_log(AVB_KERN_WARN,
 				KERN_WARNING
 				"avb_avdecc_aecp_respond_to_AEM_cmd Socket transmission fails %d \n",
@@ -1549,11 +1570,17 @@ static void avb_avdecc_acmp_respond_to_cmd(struct avdecc *avdecc)
 	if (tx_size > 0) {
 		avdecc->sd.tx_iov.iov_base = avdecc->sd.tx_buf;
 		avdecc->sd.tx_iov.iov_len = tx_size;
+#if 0
 		iov_iter_init(&avdecc->sd.tx_msg_hdr.msg_iter, WRITE,
 			      &avdecc->sd.tx_iov, 1, tx_size);
 
 		if ((err = sock_sendmsg(avdecc->sd.sock,
 					&avdecc->sd.tx_msg_hdr)) <= 0) {
+#else
+		if ((err = kernel_sendmsg(avdecc->sd.sock,
+					&avdecc->sd.tx_msg_hdr,
+					&avdecc->sd.tx_iov, 1, tx_size)) <= 0) {
+#endif
 			avb_log(AVB_KERN_WARN,
 				KERN_WARNING
 				"avb_avdecc_acmp_respondToAEMCmd Socket transmission fails %d \n",
