@@ -1157,18 +1157,24 @@ static void avb_avdecc_aecp_respond_to_AEM_cmd(struct avdecc *avdecc,
 					      1);
 		aem_stream_info->desc_type = get_stream_info_req->desc_type;
 		aem_stream_info->desc_idx = 0;
+
+		// PCM audio format as defined in IEEE 1722-2016, section I.2.4.1
 		aem_stream_info->curr_fmt.fmt.avtp.sub_type =
-			AVB_AEM_STREAM_FORMAT_AVTP;
-		aem_stream_info->curr_fmt.fmt.avtp.b1.nsr = 5;
-		aem_stream_info->curr_fmt.fmt.avtp.format = 4;
-		aem_stream_info->curr_fmt.fmt.avtp.bit_depth = 16;
-		aem_stream_info->curr_fmt.fmt.avtp.cpf = 2;
-		aem_stream_info->curr_fmt.fmt.avtp.b5.cpf = 0;
-		aem_stream_info->curr_fmt.fmt.avtp.b5.spf =
-			aem_stream_info->curr_fmt.fmt.avtp.b5.spf | 0x01;
-		aem_stream_info->curr_fmt.fmt.avtp.b6.spf = 0;
+			AVB_AEM_STREAM_FORMAT_AVTP; // defined in Table 6
+		aem_stream_info->curr_fmt.fmt.avtp.b1.nsr = 5; // defined in Table 11 (5...48kHz)
+		aem_stream_info->curr_fmt.fmt.avtp.format = 2; // defined in Table 9 (1... FLOAT_32BIT, 2... INT_32BIT, 3... INT_24BIT)
+		aem_stream_info->curr_fmt.fmt.avtp.bit_depth = 32;
+		aem_stream_info->curr_fmt.fmt.avtp.cpf = 0; // first 8 bits of channels per frame
+		aem_stream_info->curr_fmt.fmt.avtp.b5.cpf = 2 << 6; // last 2 bits of channels per frame (shifted by 6 bits)
+		aem_stream_info->curr_fmt.fmt.avtp.b5.spf = 0;
+//			aem_stream_info->curr_fmt.fmt.avtp.b5.spf | 0x01; // First 6 bits of samples per frame
+		aem_stream_info->curr_fmt.fmt.avtp.b6.spf = 6 << 4; // Last 4 bits of samples per frame (shifted by 4 bits)
 		aem_stream_info->curr_fmt.fmt.avtp.b6.res2 = 0;
 		aem_stream_info->curr_fmt.fmt.avtp.res2 = 0;
+		
+		avb_log(AVB_KERN_INFO, KERN_INFO
+			"MARKER avtp format: %lx", *(unsigned long *)&aem_stream_info->curr_fmt.fmt.avtp);
+
 		aem_stream_info->stream_id[0] =
 			((htons(get_stream_info_req->desc_type) ==
 			  AVB_AEM_DESCP_STREAM_OP) ?

@@ -187,7 +187,7 @@ static struct snd_pcm_ops avb_capture_ops = {
 static struct snd_pcm_hardware avb_playback_hw = {
 	.info			= (SNDRV_PCM_INFO_INTERLEAVED |
 				   SNDRV_PCM_INFO_BLOCK_TRANSFER),
-	.formats		= SNDRV_PCM_FMTBIT_S16_LE,
+	.formats		= SNDRV_PCM_FMTBIT_S32_LE,
 	.rates			= SNDRV_PCM_RATE_8000_192000,
 	.rate_min		= 8000,
 	.rate_max		= 192000,
@@ -203,7 +203,7 @@ static struct snd_pcm_hardware avb_playback_hw = {
 static struct snd_pcm_hardware avb_capture_hw = {
 	.info			= (SNDRV_PCM_INFO_INTERLEAVED |
 				   SNDRV_PCM_INFO_BLOCK_TRANSFER),
-	.formats		= SNDRV_PCM_FMTBIT_S16_LE,
+	.formats		= SNDRV_PCM_FMTBIT_S32_LE,
 	.rates			= SNDRV_PCM_RATE_8000_192000,
 	.rate_min		= 8000,
 	.rate_max		= 192000,
