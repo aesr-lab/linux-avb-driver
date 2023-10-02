@@ -70,7 +70,7 @@ void avb_msrp_domaindeclarations(struct msrp *msrp)
 
 	msrp->sd.tx_iov.iov_base = msrp->sd.tx_buf;
 	msrp->sd.tx_iov.iov_len = tx_size;
-#if 0
+#if LINUX_VERSION_CODE < KERNEL_VERSION(5,1,0)
 	iov_iter_init(&msrp->sd.tx_msg_hdr.msg_iter, WRITE, &msrp->sd.tx_iov, 1,
 		      tx_size);
 
@@ -174,7 +174,7 @@ void avb_msrp_talkerdeclarations(struct msrp *msrp, bool join, int state)
 
 	msrp->sd.tx_iov.iov_base = msrp->sd.tx_buf;
 	msrp->sd.tx_iov.iov_len = tx_size;
-#if 0
+#if LINUX_VERSION_CODE < KERNEL_VERSION(5,1,0)
 	iov_iter_init(&msrp->sd.tx_msg_hdr.msg_iter, WRITE, &msrp->sd.tx_iov, 1,
 		      tx_size);
 
@@ -260,7 +260,7 @@ void avb_msrp_listenerdeclarations(struct msrp *msrp, bool join, int state)
 
 	msrp->sd.tx_iov.iov_base = msrp->sd.tx_buf;
 	msrp->sd.tx_iov.iov_len = tx_size;
-#if 0
+#if LINUX_VERSION_CODE < KERNEL_VERSION(5,1,0)
 	iov_iter_init(&msrp->sd.tx_msg_hdr.msg_iter, WRITE, &msrp->sd.tx_iov, 1,
 		      tx_size);
 

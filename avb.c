@@ -536,7 +536,7 @@ static void avb_avtp_timer(unsigned long arg)
 
 		avb_card->sd.tx_iov.iov_base = avb_card->sd.tx_buf;
 		avb_card->sd.tx_iov.iov_len = tx_size;
-#if 0
+#if LINUX_VERSION_CODE < KERNEL_VERSION(5,1,0)
 		iov_iter_init(&avb_card->sd.tx_msg_hdr.msg_iter, WRITE,
 			      &avb_card->sd.tx_iov, 1, tx_size);
 

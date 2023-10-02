@@ -133,7 +133,7 @@ void avb_maap_announce(struct avdecc *avdecc)
 
 	avdecc->sd.tx_iov.iov_base = avdecc->sd.tx_buf;
 	avdecc->sd.tx_iov.iov_len = tx_size;
-#if 0
+#if LINUX_VERSION_CODE < KERNEL_VERSION(5,1,0)
 	iov_iter_init(&avdecc->sd.tx_msg_hdr.msg_iter, WRITE,
 		      &avdecc->sd.tx_iov, 1, tx_size);
 
@@ -168,7 +168,7 @@ void avb_adp_discover(struct avdecc *avdecc)
 
 	avdecc->sd.tx_iov.iov_base = avdecc->sd.tx_buf;
 	avdecc->sd.tx_iov.iov_len = tx_size;
-#if 0
+#if LINUX_VERSION_CODE < KERNEL_VERSION(5,1,0)
 	iov_iter_init(&avdecc->sd.tx_msg_hdr.msg_iter, WRITE,
 		      &avdecc->sd.tx_iov, 1, tx_size);
 
@@ -241,7 +241,7 @@ void avb_adp_advertise(struct avdecc *avdecc)
 
 	avdecc->sd.tx_iov.iov_base = avdecc->sd.tx_buf;
 	avdecc->sd.tx_iov.iov_len = tx_size;
-#if 0
+#if LINUX_VERSION_CODE < KERNEL_VERSION(5,1,0)
 	iov_iter_init(&avdecc->sd.tx_msg_hdr.msg_iter, WRITE,
 		      &avdecc->sd.tx_iov, 1, tx_size);
 
@@ -1330,7 +1330,7 @@ static void avb_avdecc_aecp_respond_to_AEM_cmd(struct avdecc *avdecc,
 	if (tx_size > 0) {
 		avdecc->sd.tx_iov.iov_base = avdecc->sd.tx_buf;
 		avdecc->sd.tx_iov.iov_len = tx_size;
-#if 0
+#if LINUX_VERSION_CODE < KERNEL_VERSION(5,1,0)
 		iov_iter_init(&avdecc->sd.tx_msg_hdr.msg_iter, WRITE,
 			      &avdecc->sd.tx_iov, 1, tx_size);
 
@@ -1570,7 +1570,7 @@ static void avb_avdecc_acmp_respond_to_cmd(struct avdecc *avdecc)
 	if (tx_size > 0) {
 		avdecc->sd.tx_iov.iov_base = avdecc->sd.tx_buf;
 		avdecc->sd.tx_iov.iov_len = tx_size;
-#if 0
+#if LINUX_VERSION_CODE < KERNEL_VERSION(5,1,0)
 		iov_iter_init(&avdecc->sd.tx_msg_hdr.msg_iter, WRITE,
 			      &avdecc->sd.tx_iov, 1, tx_size);
 
