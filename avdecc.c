@@ -140,7 +140,7 @@ void avb_maap_announce(struct avdecc *avdecc)
 	if ((err = sock_sendmsg(avdecc->sd.sock, &avdecc->sd.tx_msg_hdr)) <=
 #else
 	if ((err = kernel_sendmsg(avdecc->sd.sock, &avdecc->sd.tx_msg_hdr, 
-				&avdecc->sd.tx_iov, 1, tx_size)) <=
+				(struct kvec *)&avdecc->sd.tx_iov, 1, tx_size)) <=
 #endif
 	    0) {
 		avb_log(AVB_KERN_WARN,
@@ -175,7 +175,7 @@ void avb_adp_discover(struct avdecc *avdecc)
 	if ((err = sock_sendmsg(avdecc->sd.sock, &avdecc->sd.tx_msg_hdr)) <=
 #else
 	if ((err = kernel_sendmsg(avdecc->sd.sock, &avdecc->sd.tx_msg_hdr,
-				&avdecc->sd.tx_iov, 1, tx_size)) <=
+				(struct kvec *)&avdecc->sd.tx_iov, 1, tx_size)) <=
 #endif
 	    0) {
 		avb_log(AVB_KERN_WARN,
@@ -248,7 +248,7 @@ void avb_adp_advertise(struct avdecc *avdecc)
 	if ((err = sock_sendmsg(avdecc->sd.sock, &avdecc->sd.tx_msg_hdr)) <=
 #else
 	if ((err = kernel_sendmsg(avdecc->sd.sock, &avdecc->sd.tx_msg_hdr,
-				&avdecc->sd.tx_iov, 1, tx_size)) <=
+				(struct kvec *)&avdecc->sd.tx_iov, 1, tx_size)) <=
 #endif
 	    0) {
 		avb_log(AVB_KERN_WARN,
@@ -1342,7 +1342,7 @@ static void avb_avdecc_aecp_respond_to_AEM_cmd(struct avdecc *avdecc,
 #else
 		if ((err = kernel_sendmsg(avdecc->sd.sock,
 					&avdecc->sd.tx_msg_hdr,
-					&avdecc->sd.tx_iov, 1, tx_size)) <= 0) {
+					(struct kvec *)&avdecc->sd.tx_iov, 1, tx_size)) <= 0) {
 #endif
 			avb_log(AVB_KERN_WARN,
 				KERN_WARNING
@@ -1582,7 +1582,7 @@ static void avb_avdecc_acmp_respond_to_cmd(struct avdecc *avdecc)
 #else
 		if ((err = kernel_sendmsg(avdecc->sd.sock,
 					&avdecc->sd.tx_msg_hdr,
-					&avdecc->sd.tx_iov, 1, tx_size)) <= 0) {
+					(struct kvec *)&avdecc->sd.tx_iov, 1, tx_size)) <= 0) {
 #endif
 			avb_log(AVB_KERN_WARN,
 				KERN_WARNING
