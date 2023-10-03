@@ -1171,9 +1171,6 @@ static void avb_avdecc_aecp_respond_to_AEM_cmd(struct avdecc *avdecc,
 		aem_stream_info->curr_fmt.fmt.avtp.b6.spf = 6 << 4; // Last 4 bits of samples per frame (shifted by 4 bits)
 		aem_stream_info->curr_fmt.fmt.avtp.b6.res2 = 0;
 		aem_stream_info->curr_fmt.fmt.avtp.res2 = 0;
-		
-		avb_log(AVB_KERN_INFO, KERN_INFO
-			"MARKER avtp format: %lx", *(unsigned long *)&aem_stream_info->curr_fmt.fmt.avtp);
 
 		aem_stream_info->stream_id[0] =
 			((htons(get_stream_info_req->desc_type) ==
