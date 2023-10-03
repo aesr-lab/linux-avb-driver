@@ -23,6 +23,6 @@ clean:
 install:
 	mkdir -p $(MODINSTALL)
 	cp snd-avb.ko $(MODINSTALL)
-	depmod -a
+	depmod -a $(KVERSION)
 
 endif
